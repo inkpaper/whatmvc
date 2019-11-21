@@ -1,6 +1,5 @@
 <?php
 
-require dirname(__FILE__) . '/System/App.php';
 require dirname(__FILE__) . '/Config/Config.php';
 require 'Loader.php';
 
