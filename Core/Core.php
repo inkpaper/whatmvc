@@ -29,7 +29,12 @@ class Core
      */
     public function run()
     {
-
+        spl_autoload_register(array($this, 'loadClass'));
+        $this->checkDebug();
+        $this->removeMagicQuotes();
+        $this->unregisterGlobals();
+        $this->setDbConfig();
+        $this->route();
     }
 
     /**
@@ -37,6 +42,49 @@ class Core
      */
     public function route()
     {
+        $controllerName = $this->config['default']['controller'];
+        $actionName = $this->config['default']['controller'];
+        $params = [];
+
+        //获取url
+        $url = $_SERVER['REQUEST_URI'];
+
+        //清除?之后的url参数
+        $paramPosition = strpos($url, '?');
+        $url = $paramPosition ? substr($url, 0, $paramPosition) : $url;
+
+        //删除前后的/
+        //url示例为/<Controller>/<Action>/<Param1>/<Param2>
+        $url = trim($url, '/');
+
+        if ($url) {
+            //url分割为数组存储
+            $urlArr = explode('/', $url);
+            $urlArr = array_filter($urlArr);
+
+            //获取控制器名
+            $controllerName = ucfirst($urlArr[0]);
+
+            //获取方法名
+            array_shift($urlArr);
+            $actionName = $urlArr[0] ? $urlArr[0] : $actionName;
+
+            //获取url参数
+            array_shift($urlArr);
+            $params = $urlArr ? $urlArr : [];
+        }
+
+        $className = 'App\\Controller\\' . $controllerName;
+        //检测控制器是否存在
+        if (!class_exists($className)) exit($className . '不存在');
+        //检测方法是否存在
+        if(!method_exists($className, $actionName)) exit($actionName . '不存在');
+
+        //实例化控制器
+        $controller = new $className();
+
+        //调用控制器方法
+        call_user_func_array(array($controller, $actionName), $params);
 
     }
 
@@ -71,7 +119,7 @@ class Core
      */
     public function removeMagicQuotes()
     {
-        if(get_magic_quotes_gpc()) {
+        if (get_magic_quotes_gpc()) {
             $_GET = isset($_GET) ? $this->stripSlashesDeep($_GET) : '';
             $_POST = isset($_POST) ? $this->stripSlashesDeep($_POST) : '';
             $_COOKIE = isset($_COOKIE) ? $this->stripSlashesDeep($_COOKIE) : '';
@@ -86,7 +134,29 @@ class Core
      */
     public function unregisterGlobals()
     {
+        if (ini_get('register_globals')) {
+            $arr = ['_SESSION', '_POST', '_GET', '_REQUEST', '_COOKIE', '_SERVER', '_ENV', '_FILES'];
+            foreach ($arr as $value) {
+                foreach ($GLOBALS[$value] as $k => $v) {
+                    if ($GLOBALS[$k] === $v) {
+                        unset($GLOBALS[$k]);
+                    }
+                }
+            }
+        }
+    }
 
+    /**
+     * 设置数据库配置信息
+     */
+    public function setDbConfig()
+    {
+        if($this->config['db']) {
+            define('DB_HOST', $this->config['db']['host']);
+            define('DB_NAME', $this->config['db']['name']);
+            define('DB_USER', $this->config['db']['username']);
+            define('DB_PASS', $this->config['db']['password']);
+        }
     }
 
     /**
@@ -95,7 +165,25 @@ class Core
      */
     public function loadClass($className)
     {
+        $classMap = $this->classMap();
 
+        if (isset($classMap[$className])) {
+            //加载内核类文件
+            $file = $classMap[$className];
+        } elseif (strpos($className, '\\') !== false) {
+            //加载App类文件
+            $file = APP_PATH . str_replace('/', '\\', $className) . '.php';
+        } else {
+            //没有找到文件
+            return;
+        }
+
+        //如果是文件，就加载
+        if (is_file($file)) {
+            include $file;
+        } else {
+            return;
+        }
     }
 
     /**
@@ -103,7 +191,13 @@ class Core
      */
     protected function classMap()
     {
-
+        return [
+            'Core\Base\Controller' => CORE_PATH . '/Base/Controller.php',
+            'Core\Base\Model' => CORE_PATH . '/Base/Model.php',
+            'Core\Base\View' => CORE_PATH . '/Base/View.php',
+            'Core\Db\Db' => CORE_PATH . '/Db/Db.php',
+            'Core\Db\Sql' => CORE_PATH . '/Db/Sql.php',
+        ];
     }
 
 }
