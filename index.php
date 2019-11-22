@@ -9,7 +9,3 @@ define('APP_DEBUG', true);
 //加载框架和配置文件
 require APP_PATH . 'Core/Core.php';
 $config = require APP_PATH . 'Config/Config.php';
-
-//自动加载类
-require 'Loader.php';
-spl_autoload_register('Loader::__autoload');

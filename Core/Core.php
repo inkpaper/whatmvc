@@ -81,7 +81,7 @@ class Core
         if(!method_exists($className, $actionName)) exit($actionName . '不存在');
 
         //实例化控制器
-        $controller = new $className();
+        $controller = new $className($className, $actionName);
 
         //调用控制器方法
         call_user_func_array(array($controller, $actionName), $params);

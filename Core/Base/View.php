@@ -1,7 +1,29 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pc1014
- * Date: 2019/11/22
- * Time: 14:32
- */
+
+namespace Core\Base;
+
+class View
+{
+    public function __construct($controller, $action)
+    {
+
+    }
+
+    public function assign($name, $val)
+    {
+
+    }
+
+    public function render($mode = 'html')
+    {
+        switch ($mode) {
+            case 'xml':
+                //渲染为xml
+                break;
+            case 'html':
+            default:
+                //渲染为html
+                break;
+        }
+    }
+}
