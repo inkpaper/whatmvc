@@ -14,7 +14,10 @@ class Db
 {
     private static $pdo = null;
 
-    //创建pdo句柄
+    /**
+     * 创建pdo句柄
+     * @return PDO|null
+     */
     public static function createPdo()
     {
         //如果有实例化句柄，则直接返回

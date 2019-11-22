@@ -37,10 +37,9 @@ class Controller
 
     /**
      * 视图渲染
-     * @param string $mode
      */
-    public function render($mode = 'html')
+    public function render()
     {
-        $this->view->render($mode);
+        $this->view->render();
     }
 }

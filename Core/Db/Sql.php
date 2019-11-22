@@ -4,6 +4,11 @@ namespace Core\Db;
 
 use PDOStatement;
 
+/**
+ * 负责处理数据库操作的类
+ * Class Sql
+ * @package Core\Db
+ */
 class Sql
 {
     protected $table;

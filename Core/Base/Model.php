@@ -4,10 +4,18 @@ namespace Core\Base;
 
 use Core\Db\Sql;
 
+/**
+ * 模型基类
+ * Class Model
+ * @package Core\Base
+ */
 class Model extends Sql
 {
     public $model;
 
+    /**
+     * Model constructor.
+     */
     public function __construct()
     {
         if (!$this->table) {
