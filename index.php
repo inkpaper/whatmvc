@@ -9,3 +9,5 @@ define('APP_DEBUG', true);
 //加载框架和配置文件
 require APP_PATH . 'Core/Core.php';
 $config = require APP_PATH . 'Config/Config.php';
+
+(new \Core\Core($config))->run();

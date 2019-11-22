@@ -22,7 +22,7 @@ class Model extends Sql
             //获取当前Model
             $this->model = get_class($this);
             //数据库表名与类名一致
-            $this->table = $this->model;
+            $this->table = strtolower($this->model);
         }
     }
 }

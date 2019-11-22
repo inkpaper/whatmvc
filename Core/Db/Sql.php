@@ -22,7 +22,7 @@ class Sql
      * @param $params
      * @return $this
      */
-    public function where($where, $params)
+    public function where($where = [], $params = [])
     {
         if ($where) {
             $this->filter .= ' WHERE ';
