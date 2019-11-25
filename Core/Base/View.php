@@ -42,12 +42,12 @@ class View
         //为页面赋值
         extract($this->params);
 
-        $defaultHeader = APP_PATH . '/App/View/Header.php';
-        $defaulFooter = APP_PATH . '/App/View/Footer.php';
+        $defaultHeader = ROOT_PATH . '/App/View/Header.php';
+        $defaulFooter = ROOT_PATH . '/App/View/Footer.php';
 
-        $header = APP_PATH . '/App/View/' . $this->controller . '/Header.php';
-        $footer = APP_PATH . '/App/View/' . $this->controller . '/Footer.php';
-        $main = APP_PATH . '/App/View/' . $this->controller . '/' . $this->action . '.php';
+        $header = ROOT_PATH . '/App/View/' . $this->controller . '/Header.php';
+        $footer = ROOT_PATH . '/App/View/' . $this->controller . '/Footer.php';
+        $main = ROOT_PATH . '/App/View/' . $this->controller . '/' . $this->action . '.php';
 
         //引入页头页尾文件
         if (is_file($header)) {
@@ -56,6 +56,7 @@ class View
             include $defaultHeader;
         }
 
+        $main = str_replace('\\', DIRECTORY_SEPARATOR, $main);
         if (is_file($main)) {
             include $main;
         } else {

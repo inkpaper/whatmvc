@@ -165,22 +165,21 @@ class Core
      */
     public function loadClass($className)
     {
-        $classMap = $this->classMap();
+        $coreMap = $this->coreMap();
 
-        if (isset($classMap[$className])) {
+        if (isset($coreMap[$className])) {
             //加载内核类文件
-            $file = $classMap[$className];
+            $file = $coreMap[$className];
         } elseif (strpos($className, '\\') !== false) {
-            //加载App类文件
-            $file = APP_PATH . str_replace('/', '\\', $className) . '.php';
+            //加载其他类文件
+            $file = ROOT_PATH . str_replace('/', '\\', $className) . '.php';
         } else {
-            //没有找到文件
             return;
         }
 
         //如果是文件，就加载
         if (is_file($file)) {
-            include $file;
+            require_once $file;
         } else {
             return;
         }
@@ -189,7 +188,7 @@ class Core
     /**
      * 内核文件命名空间映射
      */
-    protected function classMap()
+    protected function coreMap()
     {
         return [
             'Core\Base\Controller' => CORE_PATH . '/Base/Controller.php',
