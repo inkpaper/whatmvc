@@ -196,6 +196,7 @@ class Core
             'Core\Base\View' => CORE_PATH . '/Base/View.php',
             'Core\Db\Db' => CORE_PATH . '/Db/Db.php',
             'Core\Db\Sql' => CORE_PATH . '/Db/Sql.php',
+            'Core\Tool\Common' => CORE_PATH . '/Tool/Common.php',
         ];
     }
 
